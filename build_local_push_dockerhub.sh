@@ -1,0 +1,5 @@
+docker build -t demo_cloud_web_service_backend .
+docker tag demo_cloud_web_service_backend:latest ludesdeveloper/demo_cloud_web_service_backend:v1.0.2
+docker tag demo_cloud_web_service_backend:latest ludesdeveloper/demo_cloud_web_service_backend:latest
+docker push ludesdeveloper/demo_cloud_web_service_backend:v1.0.2
+docker push ludesdeveloper/demo_cloud_web_service_backend:latest
