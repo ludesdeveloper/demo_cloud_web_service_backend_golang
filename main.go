@@ -69,34 +69,35 @@ func getUser(c echo.Context) error {
 	if err := c.Bind(id); err != nil {
 		return err
 	}
-	// Call Function connectDB
-	db := connectDB()
-	// Read DB
-	user := &User{}
-	db.First(&user, "nik = ?", id.NIK)
-	// Close DB connection
-	sqlDB, err := db.DB()
-	if err != nil {
-		return err
+	if id.NIK == "" {
+		// Call Function connectDB
+		db := connectDB()
+		// Read DB
+		//var users []User
+		users := &[]User{}
+		db.Find(&users)
+		// Close DB connection
+		sqlDB, err := db.DB()
+		if err != nil {
+			return err
+		}
+		sqlDB.Close()
+		return c.JSON(http.StatusOK, users)
+	} else {
+		// Call Function connectDB
+		db := connectDB()
+		// Read DB
+		user := &User{}
+		db.First(&user, "nik = ?", id.NIK)
+		// Close DB connection
+		sqlDB, err := db.DB()
+		if err != nil {
+			return err
+		}
+		sqlDB.Close()
+		return c.JSON(http.StatusOK, user)
 	}
-	sqlDB.Close()
-	return c.JSON(http.StatusOK, user)
-}
 
-func getAllUsers(c echo.Context) error {
-	// Call Function connectDB
-	db := connectDB()
-	// Read DB
-	//var users []User
-	users := &[]User{}
-	db.Find(&users)
-	// Close DB connection
-	sqlDB, err := db.DB()
-	if err != nil {
-		return err
-	}
-	sqlDB.Close()
-	return c.JSON(http.StatusOK, users)
 }
 
 func updateUser(c echo.Context) error {
@@ -164,11 +165,10 @@ func main() {
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 	// Routes
-	e.GET("/users", getAllUsers)
 	e.POST("/users", createUser)
-	e.POST("/users/getuser", getUser)
-	e.POST("/users/updateuser", updateUser)
-	e.POST("/users/deleteuser", deleteUser)
+	e.GET("/users", getUser)
+	e.PUT("/users", updateUser)
+	e.DELETE("/users", deleteUser)
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
