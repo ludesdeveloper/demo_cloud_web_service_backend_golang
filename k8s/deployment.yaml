@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-service
+spec:
+  selector:
+    matchLabels:
+      app: golang-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: golang-service
+    spec:
+      containers:
+        - name: golang-service
+          image: okteto.dev/golang-service:latest
+          ports:
+            - containerPort: 1323
